@@ -14,7 +14,7 @@ object Vector {
     *
     * @tparam A Numeric type
     */
-  trait SuperVector[@specialized A] {
+  trait SuperVector[@specialized(Int, Float, Double) A] {
 
     /**
       * Dim is the number of dimensions that this vector has.
@@ -25,6 +25,13 @@ object Vector {
       * This is the length of the vector. Plain and simple.
       */
     val length: Double
+
+    /**
+      * Gets unit vector from the current vector
+      *
+      * @return Unit vector
+      */
+    def getUnit(): SuperVector[Double] = this /[Double] this.length
 
     /**
       * Gets the rectangular form of the vector
@@ -55,7 +62,7 @@ object Vector {
       * @param scalar A number
       * @return The resultant
       */
-    def *(scalar: A): SuperVector[A]
+    def *[B](scalar: B): SuperVector[B]
 
     /**
       * Divides a vector by a scalar
@@ -63,7 +70,7 @@ object Vector {
       * @param scalar A number
       * @return The resultant
       */
-    def /(scalar: A): SuperVector[A]
+    def /[B](scalar: B): SuperVector[B]
 
     /**
       * Finds the dot product of the two vectors.
@@ -75,6 +82,25 @@ object Vector {
     def dot(other: SuperVector[A]): A
 
     def cross(other: SuperVector[A]): SuperVector[A]
+
+    /**
+      * Rotates the vector
+      *
+      * @param angle radians to rotate by in each direction
+      * @return rotated vector
+      */
+    def rotate(angle: Double*): SuperVector[A]
+  }
+
+  /**
+    * Poly-Dimensional Polar Vector
+    * Not yet implemented
+    *
+    * @param length Radial length
+    * @param angles Angle from each orthogonal direction
+    * @tparam A Numeric type
+    */
+  abstract class PolarVector[@specialized(Int, Float, Double) A](val length: A, val angles: A*)(implicit num: Numeric[A]) extends SuperVector[A] {
   }
 
   /**
@@ -83,7 +109,7 @@ object Vector {
     * @param values amount in each direction
     * @tparam A Numeric type
     */
-  class RectVector[@specialized A](val values: A*)(implicit num: Numeric[A]) extends SuperVector[A] {
+  class RectVector[@specialized(Int, Float, Double) A](val values: A*)(implicit num: Numeric[A]) extends SuperVector[A] {
     /**
       * This is the length of the vector. Plain and simple.
       */
@@ -94,16 +120,6 @@ object Vector {
     override val dim: Int = values.length
 
     override def cross(other: SuperVector[A]): SuperVector[A] = ???
-
-    /**
-      * Divides a vector by a scalar
-      *
-      * @param scalar A number
-      * @return The resultant
-      */
-    override def /(scalar: A) = {
-      new RectVector[A](values.map(x => scale[A](x, scalar)): _*)
-    }
 
     /**
       * Adds two vectors
@@ -155,9 +171,18 @@ object Vector {
       * @param scalar A number
       * @return The resultant
       */
-    override def *(scalar: A) = {
-      new RectVector[A](values.map(x => num.times(x, scalar)): _*)
+    override def *[B](scalar: B) = {
+      new RectVector[B](values.map(x => implicitly[Numeric[B]].times(x.asInstanceOf[B], scalar)): _*)
+    }
+
+    /**
+      * Divides a vector by a scalar
+      *
+      * @param scalar A number
+      * @return The resultant
+      */
+    override def /[B](scalar: B) = {
+      new RectVector[B](values.map(x => scale[B](x.asInstanceOf[B], scalar)): _*)
     }
   }
-
 }
