@@ -3,7 +3,7 @@ package math
 /**
   * Created by Torri on 4/15/2016.
   */
-object MathImplicits {
+object Implicits {
 
   import scala.math.Integral.Implicits._
 

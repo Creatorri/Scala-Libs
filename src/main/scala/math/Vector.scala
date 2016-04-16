@@ -4,8 +4,8 @@ package math
   * Created by Torri on 4/15/2016.
   */
 
-import cs.ListImplicits._
-import math.MathImplicits._
+import cs.Implicits._
+import math.Implicits._
 
 object Vector {
 

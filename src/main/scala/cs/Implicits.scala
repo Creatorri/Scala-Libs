@@ -3,7 +3,7 @@ package cs
 /**
   * Created by Torri on 4/15/2016.
   */
-object ListImplicits {
+object Implicits {
   def fold[A](p: (Seq[A], Seq[A]), func: (A, A, A) => A, startval: A): A = {
     if (p._1.isEmpty || p._2.isEmpty) {
       return startval
