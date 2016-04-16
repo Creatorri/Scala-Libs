@@ -4,13 +4,10 @@ package math
   * Created by Torri on 4/15/2016.
   */
 
-import cs.ListImplicits
+import cs.ListImplicits._
+import math.MathImplicits._
 
 object Vector {
-
-  import scala.math.Integral.Implicits._
-
-  private def scale[B: Integral](num: B, denom: B) = num / denom
 
   /**
     * One vector to rule them all
@@ -104,7 +101,7 @@ object Vector {
       * @param scalar A number
       * @return The resultant
       */
-    override def /(scalar: A): SuperVector[A] = {
+    override def /(scalar: A) = {
       new RectVector[A](values.map(x => scale[A](x, scalar)): _*)
     }
 
@@ -114,7 +111,10 @@ object Vector {
       * @param other What is being added.
       * @return The resultant
       */
-    override def +(other: SuperVector[A]): SuperVector[A] = ???
+    override def +(other: SuperVector[A]) = {
+      val thing = other.toRect()
+      new RectVector[A](map[A]((values, thing.values), (x, y) => num.plus(x, y)): _*)
+    }
 
     /**
       * Finds the dot product of the two vectors.
@@ -123,12 +123,12 @@ object Vector {
       * @param other The vector to be dot producted with
       * @return A number
       */
-    override def dot(other: SuperVector[A]): A = {
-      val rectother = other.toRect()
-      if (other.dim != dim) {
+    override def dot(other: SuperVector[A]) = {
+      val thing = other.toRect()
+      if (thing.dim != dim) {
         throw new Exception("Wrong Vector Dimensions in Dot Product! Must be the same.")
       }
-      ListImplicits.fold[A]((values, rectother.values), (a: A, b: A, c: A) => num.plus(a, num.plus(b, c)), num.zero)
+      fold[A]((values, thing.values), (a: A, b: A, c: A) => num.plus(a, num.plus(b, c)), num.zero)
     }
 
     /**
@@ -136,7 +136,7 @@ object Vector {
       *
       * @return rectangular vector
       */
-    override def toRect(): RectVector[A] = ???
+    override def toRect() = this
 
     /**
       * Subtracts two vectors
@@ -144,7 +144,10 @@ object Vector {
       * @param other What is to be subtracted
       * @return The resultant
       */
-    override def -(other: SuperVector[A]): SuperVector[A] = ???
+    override def -(other: SuperVector[A]) = {
+      val thing = other.toRect()
+      new RectVector[A](map[A]((values, thing.values), (x, y) => num.minus(x, y)): _*)
+    }
 
     /**
       * Multiplies a vector by a scalar
@@ -152,7 +155,9 @@ object Vector {
       * @param scalar A number
       * @return The resultant
       */
-    override def *(scalar: A): SuperVector[A] = ???
+    override def *(scalar: A) = {
+      new RectVector[A](values.map(x => num.times(x, scalar)): _*)
+    }
   }
 
 }
