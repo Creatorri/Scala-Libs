@@ -31,7 +31,7 @@ object Vector {
       *
       * @return Unit vector
       */
-    def getUnit(): SuperVector[Double] = this /[Double] this.length
+    def getUnit() = this./[Double](this.length)
 
     /**
       * Gets the rectangular form of the vector
@@ -62,7 +62,7 @@ object Vector {
       * @param scalar A number
       * @return The resultant
       */
-    def *[B](scalar: B): SuperVector[B]
+    def *[B: Integral](scalar: B): SuperVector[B]
 
     /**
       * Divides a vector by a scalar
@@ -70,7 +70,7 @@ object Vector {
       * @param scalar A number
       * @return The resultant
       */
-    def /[B](scalar: B): SuperVector[B]
+    def /[B: Integral](scalar: B): SuperVector[B]
 
     /**
       * Finds the dot product of the two vectors.
@@ -171,7 +171,7 @@ object Vector {
       * @param scalar A number
       * @return The resultant
       */
-    override def *[B](scalar: B) = {
+    override def *[B: Integral](scalar: B) = {
       new RectVector[B](values.map(x => implicitly[Numeric[B]].times(x.asInstanceOf[B], scalar)): _*)
     }
 
@@ -181,8 +181,16 @@ object Vector {
       * @param scalar A number
       * @return The resultant
       */
-    override def /[B](scalar: B) = {
+    override def /[B: Integral](scalar: B) = {
       new RectVector[B](values.map(x => scale[B](x.asInstanceOf[B], scalar)): _*)
     }
+
+    /**
+      * Rotates the vector
+      *
+      * @param angle radians to rotate by in each direction
+      * @return rotated vector
+      */
+    override def rotate(angle: Double*) = ???
   }
 }
