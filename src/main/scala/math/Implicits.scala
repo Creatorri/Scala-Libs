@@ -5,7 +5,7 @@ package math
   */
 object Implicits {
 
-  import scala.math.Integral.Implicits._
+  import scala.math.Fractional.Implicits._
 
-  def scale[B: Integral](num: B, denom: B) = num / denom
+  def scale[A: Fractional, B: Fractional](num: A, denom: B): A = num / denom.asInstanceOf[A]
 }

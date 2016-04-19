@@ -3,9 +3,7 @@
   */
 object Tester {
   def main(args: Array[String]) {
-    import math.Vector._
-    val v = new RectVector[Double](0.1, 0.5, 9)
-    val pos = new RectVector[Double](4, 5, 8)
-    println(v dot pos)
+    import math.Implicits._
+    println(scale(4.4, 2.0 / 3.0))
   }
 }
